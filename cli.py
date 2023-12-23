@@ -2,20 +2,24 @@ import click
 import random
 from pizzaclass import PizzaClass
 
-def bake() -> None:
-    '''Выводит время приготовления пиццы,
+
+def bake(pizza: PizzaClass) -> None:
+    """Выводит время приготовления пиццы,
     являющеся случайным числом от 1 до 10
-    '''
+    """
+
+    #готовим нужную пиццу
     rand_num = random.randrange(1, 10)
-    print(f'👨‍🍳 Приготовили за {rand_num}с!')
+    print(f'👨‍🍳 Приготовили {pizza.name} за {rand_num}с!')
 
 
-def bake_and_delivery(bake):
+def log(bake):
     """Декоратор добавляет функционал
     доставки
     """
-    def wrapper():
-        bake()
+    def wrapper(*args):
+        print('Имя декорируемой функции - ', bake.__name__)
+        bake(*args)
         rand_num = random.randrange(1, 10)
         print(f'🛵 Доставили за {rand_num}c!')
     return wrapper
@@ -27,36 +31,49 @@ def cli(ctx):
     if ctx.invoked_subcommand:
         return
 
+
 @cli.command()
 @click.option('--size', default='L',
               help = 'L|XL', show_default=True)
 @click.option('--delivery', default=False, is_flag=True)
-@click.argument('pizza', nargs=1)
-def order(pizza: str, delivery: bool, size: str):
-    '''команда для заказа пиццы'''
+@click.argument('pizza_nm', nargs=1)
+def order(pizza_nm: str, delivery: bool, size: str):
+    """команда для заказа пиццы"""
 
-    if pizza not in {'margherita', 'pepperoni', 'hawaiian'}:
+    if pizza_nm not in {'margherita', 'pepperoni', 'hawaiian'}:
         raise ValueError('Такой пиццы нет в ассортименте')
     if size not in {'L', 'XL'}:
         raise ValueError('Такого размера нет в ассортименте')
-    
+
+    pizza = PizzaClass(pizza_nm, menu[pizza_nm], size)
+
     if delivery:
-        bake_delivery = bake_and_delivery(bake)
-        bake_delivery()
+        bake_delivery = log(bake)
+        bake_delivery(pizza)
     else:
-        bake()
+        bake(pizza)
+
 
 @cli.command()
 def menu():
-    margherita.dict()
-    pepperoni.dict()
-    hawaiian.dict()
+    """команда для показа меню пиццерии"""
+
+    for name, ingredients in menu.items():
+        print(name.capitalize(), end = ':  ')
+        for index, elem in enumerate(ingredients):
+            if index == len(ingredients) - 1:
+                print(elem, end='')
+            else:
+                print(elem, end=', ')
+        print()
+
 
 if __name__ == '__main__':
-    margherita = PizzaClass('Margherita \N{Cheese Wedge}',
-                            ['tomato sauce', 'mozzarella', 'tomatoes'])
-    pepperoni = PizzaClass('Pepperoni \N{Slice of Pizza}',
-                           ['tomato sauce', 'mozzarella', 'pepperoni'])
-    hawaiian = PizzaClass('Hawaiian \N{Pineapple}',
-                          ['tomato sauce', 'mozzarella', 'chiken', 'pineapples'])
+    menu = {
+        'margherita':
+            ['tomato sauce', 'mozzarella', 'tomatoes'],
+        'pepperoni':
+            ['tomato sauce', 'mozzarella', 'pepperoni'],
+        'hawaiian':
+            ['tomato sauce', 'mozzarella', 'chiken', 'pineapples']}
     cli()

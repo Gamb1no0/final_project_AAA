@@ -8,13 +8,14 @@ class PizzaClass:
         self.ingredients = ingredients
 
     def size_seter(self, size: str):
-        '''меняет атрибут отвечающий за размер пиццы'''
+        """меняет атрибут отвечающий за размер пиццы"""
+        
         if size.upper() not in  {'L', 'XL'}:
             raise ValueError('Данного размера нет в ассортименте')
         self.size = size
 
     def dict(self) -> None:
-        '''Выводит рецепт в виде словаря'''
+        """Выводит рецепт в виде словаря"""
 
         print(self.name, end=': ')
         for i in range(len(self.ingredients)-1):
