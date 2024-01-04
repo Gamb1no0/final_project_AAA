@@ -2,6 +2,13 @@ import click
 import random
 from pizzaclass import PizzaClass
 
+MENU = {
+        'margherita':
+            ['tomato sauce', 'mozzarella', 'tomatoes'],
+        'pepperoni':
+            ['tomato sauce', 'mozzarella', 'pepperoni'],
+        'hawaiian':
+            ['tomato sauce', 'mozzarella', 'chiken', 'pineapples']}
 
 def bake(pizza: PizzaClass) -> None:
     """Выводит время приготовления пиццы,
@@ -57,7 +64,7 @@ def order(pizza_nm: str, delivery: bool, size: str):
 def menu():
     """команда для показа меню пиццерии"""
 
-    for name, ingredients in menu.items():
+    for name, ingredients in MENU.items():
         print(name.capitalize(), end = ':  ')
         for index, elem in enumerate(ingredients):
             if index == len(ingredients) - 1:
@@ -68,11 +75,4 @@ def menu():
 
 
 if __name__ == '__main__':
-    menu = {
-        'margherita':
-            ['tomato sauce', 'mozzarella', 'tomatoes'],
-        'pepperoni':
-            ['tomato sauce', 'mozzarella', 'pepperoni'],
-        'hawaiian':
-            ['tomato sauce', 'mozzarella', 'chiken', 'pineapples']}
     cli()
