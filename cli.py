@@ -3,11 +3,11 @@ import random
 from pizzaclass import PizzaClass
 
 MENU = {
-        'margherita':
+        'margherita \N{Cheese Wedge}':
             ['tomato sauce', 'mozzarella', 'tomatoes'],
-        'pepperoni':
+        'pepperoni \N{Slice of Pizza}':
             ['tomato sauce', 'mozzarella', 'pepperoni'],
-        'hawaiian':
+        'hawaiian \N{Pineapple}':
             ['tomato sauce', 'mozzarella', 'chiken', 'pineapples']}
 
 def bake(pizza: PizzaClass) -> None:
