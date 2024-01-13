@@ -39,7 +39,7 @@ def bake(pizza_nm: str, size: str) -> Union[Hawaiian, Pepperoni, Margherita]:
 @log('🛵 Доставили за {}c!')
 def deliver(pizza: Union[Hawaiian, Pepperoni, Margherita]) -> None:
     """Сообщает, что курьер забрал пиццу"""
-    print(f'Курьер взял pizza {pizza.get_name()}')
+    print(f'Курьер взял пиццу {pizza.get_name()}')
 
 
 @click.group(invoke_without_command=True)
