@@ -5,6 +5,8 @@ from pizzaclass import Hawaiian
 from pizzaclass import Pepperoni
 from pizzaclass import Margherita
 
+#Ставлю сид, чтобы было удобнее тестить
+random = random.Random(42)
 
 MENU = {
         'margherita':
@@ -24,7 +26,7 @@ def log(template):
             result = func(*args)
             rand_num = random.randrange(1, 10)
             output = template.format(rand_num)
-            print(output)
+            click.echo(output)
             return result
         return wrapper
     return decorator
@@ -39,7 +41,7 @@ def bake(pizza_nm: str, size: str) -> Union[Hawaiian, Pepperoni, Margherita]:
 @log('🛵 Доставили за {}c!')
 def deliver(pizza: Union[Hawaiian, Pepperoni, Margherita]) -> None:
     """Сообщает, что курьер забрал пиццу"""
-    print(f'Курьер взял пиццу {pizza.get_name()}')
+    click.echo(f'Курьер взял пиццу {pizza.get_name()}')
 
 
 @click.group(invoke_without_command=True)
@@ -51,7 +53,8 @@ def cli(ctx):
 
 @cli.command()
 @click.option('--size', default='L',
-              help = 'L|XL', show_default=True)
+              help = 'L|XL',
+              show_default=True)
 @click.option('--delivery', default=False, is_flag=True)
 @click.argument('pizza_nm', nargs=1)
 def order(pizza_nm: str, delivery: bool, size: str):
@@ -59,9 +62,11 @@ def order(pizza_nm: str, delivery: bool, size: str):
 
     pizza_nm = pizza_nm.lower()
     if pizza_nm not in {'margherita', 'pepperoni', 'hawaiian'}:
-        raise ValueError('Такой пиццы нет в ассортименте')
+        click.echo('Такой пиццы нет в ассортименте')
+        exit(1)
     if size not in {'L', 'XL'}:
-        raise ValueError('Такого размера нет в ассортименте')
+        click.echo('Такого размера нет в ассортименте')
+        exit(2)
 
     pizza = bake(pizza_nm, size)
     if delivery:
